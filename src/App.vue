@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useWakeLock, useFullscreen } from '@vueuse/core'
 import Timers from './components/Timers.vue';
 import Topbar from './components/Topbar.vue';
 
@@ -9,7 +10,7 @@ let studentNameInput = ref("");
 
 function addStudent(tiersTemps: boolean = false){
   if(studentNameInput.value){
-    etudiants.value[Date.now()] = {name: studentNameInput.value, isTiersTemps: tiersTemps}; 
+    etudiants.value[Date.now()] = {name: studentNameInput.value, isTiersTemps: tiersTemps};
     studentNameInput.value = '';
   }
 }
@@ -17,6 +18,17 @@ function addStudent(tiersTemps: boolean = false){
 function removeStudent(key: any){
   delete etudiants.value[key];
 }
+
+const { isFullscreen } = useFullscreen()
+const { request, release } = useWakeLock()
+
+watch(isFullscreen, (fullscreen) => {
+  if (fullscreen) {
+    request('screen')
+  } else {
+    release()
+  }
+})
 </script>
 
 <template>

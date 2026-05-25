@@ -1,6 +1,20 @@
 <template>
-    <div class="sticky top-0 z-40 w-full text-right p-2">
-        <button @click="toggleDark" type="button" id="headlessui-listbox-button-4" aria-haspopup="true" aria-expanded="false" aria-labelledby="headlessui-listbox-label-3 headlessui-listbox-button-undefined">
+    <div class="sticky top-0 z-40 w-full text-right p-2 flex justify-end items-center gap-3">
+        <button @click="toggleFullscreen" type="button" :title="isFullscreen ? 'Quitter le plein écran' : 'Plein écran'">
+            <svg v-if="!isFullscreen" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 stroke-sky-500">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+            </svg>
+            <svg v-else viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 stroke-sky-500">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3"/>
+                <path d="M21 8h-3a2 2 0 0 1-2-2V3"/>
+                <path d="M3 16h3a2 2 0 0 1 2 2v3"/>
+                <path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+            </svg>
+        </button>
+        <button @click="toggleDark" type="button">
             <span class="dark:hidden">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
                 <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" class="fill-sky-400/20 stroke-sky-500"></path>
@@ -19,10 +33,12 @@
 </template>
 
 <script lang="ts" setup>
+    import { useFullscreen } from '@vueuse/core'
+
+    const { isFullscreen, toggle: toggleFullscreen } = useFullscreen()
 
     function toggleDark(){
         document.documentElement.classList.toggle("dark");
         localStorage.setItem("htmlClass", document.documentElement.className);
     }
-
 </script>
