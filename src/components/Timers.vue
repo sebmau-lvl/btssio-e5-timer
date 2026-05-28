@@ -44,19 +44,23 @@ calculateEndTimes(addedAt.getTime())
 const addedAtFormated = computed(() => addedAt.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit', hour12: false}))
 
 function toggleTimer(targetStep: string){
+    const stepIndex = phases.indexOf(targetStep)
+
     if(step.value == targetStep && running.value){
         running.value = false
-        // Recalculer toutes les échéances à partir de maintenant
-        calculateEndTimes(Date.now())
+        calculateEndTimes(Date.now(), stepIndex)
     } else {
         running.value = true
-        // Mettre à jour uniquement la phase active
         if(timer.value[targetStep] > 0){
-            startTime.value[targetStep] = formatEndDate(Date.now())
-            endTime.value[targetStep] = formatEndDate(Date.now() + timer.value[targetStep] * 1000)
+            const now = Date.now()
+            const endMs = now + timer.value[targetStep] * 1000
+            startTime.value[targetStep] = formatEndDate(now)
+            endTime.value[targetStep] = formatEndDate(endMs)
+            calculateEndTimes(endMs, stepIndex + 1)
         } else {
             startTime.value[targetStep] = "--:--"
             endTime.value[targetStep] = "--:--"
+            calculateEndTimes(Date.now(), stepIndex + 1)
         }
     }
 
@@ -89,9 +93,10 @@ function formatEndDate(ms: number): string
     return new Date(ms).toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit', hour12: false})
 }
 
-function calculateEndTimes(baseTimeMs: number) {
+function calculateEndTimes(baseTimeMs: number, fromPhaseIndex: number = 0) {
     let cumulative = baseTimeMs
-    for (const phase of phases) {
+    for (let i = fromPhaseIndex; i < phases.length; i++) {
+        const phase = phases[i]
         if (timer.value[phase] > 0) {
             startTime.value[phase] = formatEndDate(cumulative)
             cumulative += timer.value[phase] * 1000
