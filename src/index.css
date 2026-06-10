@@ -1,3 +1,315 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #374151;
+  background: #f6f7fb;
+  --bg: #f6f7fb;
+  --card: #fff;
+  --border: #e5e7eb;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .04);
+  --green: #9abf9d;
+  --red: #df6f6f;
+}
+
+/* Base de page et calcul uniforme des dimensions. */
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); }
+button, input { font: inherit; }
+button:focus-visible, input:focus-visible { outline: 3px solid rgba(59, 130, 246, .25); outline-offset: 2px; }
+.page { padding: 12px 16px 14px; }
+
+/* En-tête regroupant l'identité de l'épreuve, l'horloge et les réglages globaux. */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-bottom: 8px;
+}
+
+h1 { margin: 0; color: #4b5563; font-size: 20px; font-weight: 700; }
+.title-group, .global-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.header-info {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.header-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: #64748b;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.title-icon { width: 25px; height: 25px; stroke: #f28a2a; }
+.header-info time {
+  color: #4b5563;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.current-time { min-width: 92px; }
+
+.global-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.global-options input[type="text"] {
+  width: 180px;
+  min-width: 140px;
+  height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #cfd6df;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 16px;
+}
+
+.global-options .theoretical-start {
+  min-height: 42px;
+  padding: 2px 10px;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.global-options input[type="time"] {
+  padding: 6px 8px;
+  border: 1px solid #cfd6df;
+  border-radius: 7px;
+  color: #374151;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.global-options input[type="time"]:disabled { color: #6b7280; background: #f1f3f6; cursor: not-allowed; }
+.global-options > button {
+  height: 43px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: var(--green);
+  font-size: 16px;
+  cursor: pointer;
+}
+.global-options > button:disabled { opacity: .55; cursor: not-allowed; }
+
+.candidate {
+  position: relative;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.candidate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.candidate-title { display: flex; align-items: center; gap: 10px; color: #1f2937; font-size: 20px; font-weight: 700; }
+.delete-candidate {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #8a94a6;
+  background: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.candidate-options { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.candidate-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg);
+  font-size: 14px;
+}
+
+/* Une ligne de candidat contient son décalage, ses phases et l'espace restant de la frise. */
+.timeline-lane { display: grid; align-items: stretch; min-width: 0; }
+.timeline-offset {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc3e3e;
+  font-size: 14px;
+  font-weight: 800;
+}
+.offset-editor { display: flex; align-items: center; justify-content: center; gap: 3px; white-space: nowrap; }
+.offset-input {
+  width: 48px;
+  padding: 4px 3px;
+  border: 1px solid #ef9a9a;
+  border-radius: 6px;
+  color: #c62828;
+  background: #fff;
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+.offset-input:disabled { border-color: transparent; background: transparent; opacity: 1; cursor: not-allowed; }
+.timeline-tail { min-width: 0; }
+
+.phases { display: grid; gap: 7px; min-width: 0; }
+.phase { min-width: 0; margin: 0; padding: 3px 5px 5px; border: 2px solid #d8dee8; border-radius: 14px; }
+.phase legend { padding: 0 7px; color: #64748b; font-size: 13px; font-weight: 800; letter-spacing: .06em; }
+.phase-steps { display: grid; gap: 5px; }
+
+.step {
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+/* Boutons circulaires dessinés en CSS pour démarrer, interrompre et reprendre un timer. */
+.step-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.timer-btn {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fdeecf;
+  cursor: pointer;
+}
+
+.timer-btn.start::before, .timer-btn.resume::before {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid #f28a2a;
+  content: "";
+}
+.timer-btn.pause::before {
+  width: 14px;
+  height: 17px;
+  border-left: 5px solid #f28a2a;
+  border-right: 5px solid #f28a2a;
+  content: "";
+}
+.timer-btn.resume { background: #e3f2e5; }
+.timer-btn.resume::before { border-left-color: #65966a; }
+.reset-btn {
+  padding: 2px 4px;
+  border: 1px solid #d7dce4;
+  border-radius: 5px;
+  color: #778195;
+  background: #fff;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.running {
+  border-color: #2f6f3e;
+  outline: 3px solid rgba(47, 111, 62, .38);
+  box-shadow: 0 0 0 1px #2f6f3e, 0 2px 8px rgba(47, 111, 62, .18);
+}
+.paused { outline: 3px solid rgba(101, 150, 106, .18); }
+.step-content { min-width: 0; }
+.step-name { margin-bottom: 3px; color: #4b5563; font-size: 16px; font-weight: 600; }
+.step-details { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.step-time {
+  margin: 0;
+  color: #374151;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.step-time.overtime { color: var(--red); font-weight: 700; }
+.step-time.overtime-running { animation: overtime-blink 1s steps(2, end) infinite; }
+@keyframes overtime-blink { 50% { opacity: .2; } }
+.step-range { color: #374151; font-size: 14px; white-space: nowrap; }
+
+.progress-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin-top: 1px; }
+.progress-track { height: 11px; flex: 1; overflow: hidden; border-radius: 999px; background: #e5e7eb; }
+.progress-fill { height: 100%; border-radius: inherit; transition: width .25s linear, background-color .2s ease; }
+.progress-fill.normal { background: #78ad7d; }
+.progress-fill.warning { background: #f0a33a; }
+.progress-fill.danger { background: #d95656; }
+.progress-value { min-width: 36px; color: #4b5563; font-size: 13px; font-weight: 700; text-align: right; }
+
+@media (max-width: 1100px) {
+  /* La frise défile horizontalement plutôt que de comprimer les quatre timers. */
+  .timeline-lane { min-width: 1200px; }
+  .candidates { overflow-x: auto; padding-bottom: 6px; }
+}
+
+@media (max-width: 650px) {
+  /* Sur mobile, les phases et les étapes sont empilées verticalement. */
+  .page { padding: 12px; }
+  .toolbar, .title-group, .global-options {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar, .title-group { flex-wrap: wrap; }
+  .header-info { justify-content: center; }
+  .global-options input[type="text"] { width: 100%; min-width: 0; }
+  .global-options > button { width: 100%; }
+  .candidates { overflow-x: visible; padding-bottom: 0; }
+  .timeline-lane { display: block; min-width: 0; }
+  .timeline-offset, .timeline-tail { display: none; }
+  .phases, .phase-steps { grid-template-columns: 1fr !important; }
+  .phases { gap: 8px; }
+}

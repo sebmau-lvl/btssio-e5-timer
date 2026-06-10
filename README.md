@@ -1,11 +1,11 @@
-# Vue 3 : Timer épreuve E5
+# Vue 3 : Timer épreuve E6
 
-[![Timer](https://img.youtube.com/vi/_cMkRmXe4sw/0.jpg)](https://www.youtube.com/watch?v=_cMkRmXe4sw)
+Application de planification et de chronométrage des candidats à l'épreuve E6 du BTS SIO.
 
-- Disponible à l'adresse suivante : <https://sio-e5-timer.netlify.app/>
-- Disponible en IPFS : <https://ipfs.fleek.co/ipns/e5.brosseau.ovh>
-- IPNS : [ipns://e5.brosseau.ovh/](ipns://e5.brosseau.ovh/)
+## Commandes
 
-IPFS disponible par Brave :
-
-![IPFS Brave](./brave_ipfs.png)
+```bash
+npm install
+npm run dev
+npm run build
+```

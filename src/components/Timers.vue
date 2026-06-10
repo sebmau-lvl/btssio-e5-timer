@@ -10,6 +10,7 @@ let step = ref("")
 let running = ref(false)
 
 const phases = ['preparation', 'entretien', 'realisation', 'recettage'] as const
+type Phase = typeof phases[number]
 
 const timer: any = ref({
     "preparation": 1800,
@@ -43,7 +44,7 @@ calculateEndTimes(addedAt.getTime())
 
 const addedAtFormated = computed(() => addedAt.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit', hour12: false}))
 
-function toggleTimer(targetStep: string){
+function toggleTimer(targetStep: Phase){
     const stepIndex = phases.indexOf(targetStep)
 
     if(step.value == targetStep && running.value){
